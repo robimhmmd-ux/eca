@@ -33,13 +33,13 @@ export function HUD() {
         <Link to="/" className="flex items-center gap-2 group">
           <img
             src={brandLogo}
-            alt="U deserve to happy"
+            alt="I WILL MAKE U HAPPY"
             width={32}
             height={32}
             className="w-8 h-8 group-hover:animate-wiggle"
           />
           <span className="font-display font-bold text-lg tracking-tight hidden sm:inline">
-            U deserve to happy
+            I WILL MAKE U HAPPY
           </span>
         </Link>
 
