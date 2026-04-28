@@ -16,8 +16,9 @@ import { useEffect, useMemo } from "react";
 import { HugAnim } from "@/assets/animations/HugAnim";
 import { PatAnim } from "@/assets/animations/PatAnim";
 import { PinchAnim } from "@/assets/animations/PinchAnim";
+import { KissAnim } from "@/assets/animations/KissAnim";
 
-type ComfortAnim = "hug" | "pat" | "pinch";
+type ComfortAnim = "hug" | "pat" | "pinch" | "kiss";
 
 export function ComfortOverlay() {
   const { comfortOpen, comfortText, closeComfort } = useApp();
@@ -32,7 +33,7 @@ export function ComfortOverlay() {
 
   // Pilih animasi acak setiap overlay terbuka
   const anim: ComfortAnim = useMemo(() => {
-    const list: ComfortAnim[] = ["hug", "pat", "pinch"];
+    const list: ComfortAnim[] = ["hug", "pat", "pinch", "kiss"];
     return list[Math.floor(Math.random() * list.length)];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comfortOpen]);
@@ -74,6 +75,7 @@ export function ComfortOverlay() {
           {anim === "hug" && <HugAnim />}
           {anim === "pat" && <PatAnim />}
           {anim === "pinch" && <PinchAnim />}
+          {anim === "kiss" && <KissAnim />}
         </div>
 
         <p className="font-display text-2xl sm:text-3xl font-bold leading-snug text-foreground mb-3">

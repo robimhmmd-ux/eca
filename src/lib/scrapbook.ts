@@ -19,6 +19,13 @@ export type ScrapPage = {
   alt: string;
 };
 
+import page1 from "@/assets/scrapbook/halaman-1.png";
+import page2 from "@/assets/scrapbook/halaman-2.png";
+import page3 from "@/assets/scrapbook/halaman-3.png";
+import page4 from "@/assets/scrapbook/halaman-4.png";
+import page5 from "@/assets/scrapbook/halaman-5.png";
+import page6 from "@/assets/scrapbook/halaman-6.png";
+
 // ----------- IMPORT GAMBAR -----------
 // Contoh kalau kamu udah punya file:
 //   import page1 from "@/assets/scrapbook/halaman-1.png";
@@ -31,14 +38,14 @@ export type ScrapPage = {
 const placeholder = (seed: string) =>
   `https://picsum.photos/seed/${seed}/900/900`;
 
-export const SCRAPBOOK_TITLE = "Scrap Book Buat Kamu";
-export const SCRAPBOOK_SUBTITLE = "kumpulan kenangan & kata semangat 💌";
+export const SCRAPBOOK_TITLE = "I wanna u read this:) ";
+export const SCRAPBOOK_SUBTITLE = "💌";
 
 export const PAGES: ScrapPage[] = [
-  { image: placeholder("scrap-cover"), alt: "Cover scrap book" },
-  { image: placeholder("scrap-1"),     alt: "Halaman kenangan 1" },
-  { image: placeholder("scrap-2"),     alt: "Halaman kenangan 2" },
-  { image: placeholder("scrap-3"),     alt: "Halaman kenangan 3" },
-  { image: placeholder("scrap-4"),     alt: "Halaman kenangan 4" },
-  { image: placeholder("scrap-5"),     alt: "Halaman penutup" },
+  { image: page1,     alt: "Halaman kenangan 1" },
+  { image: page2,     alt: "Halaman kenangan 2" },
+  { image: page3,     alt: "Halaman kenangan 3" },
+  { image: page4,     alt: "Halaman kenangan 4" },
+  { image: page5,     alt: "Halaman penutup" },
+  { image: page6,     alt: "Halaman kenangan 6" },
 ];

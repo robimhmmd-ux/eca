@@ -9,14 +9,15 @@
 // =============================================================
 
 // Import gambar dari folder assets — Vite akan resolve ke URL jadi.
-import catImg    from "@/assets/pets/cat.png";
-import rabbitImg from "@/assets/pets/rabbit.png";
-import blobImg   from "@/assets/pets/blob.png";
-import bearImg   from "@/assets/pets/bear.png";
-import duckImg   from "@/assets/pets/duck.png";
-import ghostImg  from "@/assets/pets/ghost.png";
-import frogImg   from "@/assets/pets/frog.png";
-import chickImg  from "@/assets/pets/chick.png";
+import catImg    from "@/assets/pets/cat.gif";
+import rabbitImg from "@/assets/pets/cewe_kucing.gif";
+import blobImg   from "@/assets/pets/kekelawar.gif";
+import bearImg   from "@/assets/pets/kucing-pelangi.gif";
+import duckImg   from "@/assets/pets/pink.gif";
+import ghostImg  from "@/assets/pets/hantu.gif";
+import frogImg   from "@/assets/pets/pokemon-ungu.gif";
+import chickImg  from "@/assets/pets/anime.gif";
+import cihuy from "@/assets/pets/bebek.gif";  
 
 export type Pet = {
   id: string;
@@ -28,12 +29,12 @@ export type Pet = {
 };
 
 export const PETS: Pet[] = [
-  { id: "cat",    name: "Mochi",  emoji: "🐱", image: catImg,    price: 50,  description: "kucing oren yang suka tidur di pangkuan" },
-  { id: "rabbit", name: "Bun",    emoji: "🐰", image: rabbitImg, price: 80,  description: "kelinci putih yang lompat-lompat lucu" },
-  { id: "blob",   name: "Boba",   emoji: "🫧", image: blobImg,   price: 30,  description: "blob imut yang ngambang kemana-mana" },
-  { id: "bear",   name: "Coklat", emoji: "🐻", image: bearImg,   price: 120, description: "beruang madu, pelukannya hangat" },
-  { id: "duck",   name: "Kwek",   emoji: "🦆", image: duckImg,   price: 60,  description: "bebek kecil yang suka ngikutin kamu" },
-  { id: "ghost",  name: "Pup",    emoji: "👻", image: ghostImg,  price: 100, description: "hantu sopan, nggak nakut-nakutin kok" },
-  { id: "frog",   name: "Hijau",  emoji: "🐸", image: frogImg,   price: 70,  description: "kodok kalem, suka denger curhat" },
-  { id: "chick",  name: "Kuning", emoji: "🐥", image: chickImg,  price: 40,  description: "anak ayam, cuit-cuit penyemangat" },
+  { id: "cat",    name: "Mochi",  emoji: "🐱", image: catImg,    price: 50,  description: "Kucing abu-abu kecil pembawa balon merah, siap terbang ke hatimu." },
+  { id: "rabbit", name: "Eca",    emoji: "🐰", image: rabbitImg, price: 80,  description: "Gadis kecil petualang yang selalu ditemani kucing hitam misterius." },
+  { id: "blob",   name: "Tiwul",   emoji: "🫧", image: blobImg,   price: 30,  description: "Naga ungu kecil yang jago jaga perasaan, hobinya ngumpet di awan." },
+  { id: "bear",   name: "Yappie", emoji: "🐻", image: bearImg,   price: 120, description: "Kucing pelangi yang lincah, siap mewarnai hari-harimu yang mendung." },
+  { id: "ghost",  name: "Booo",    emoji: "👻", image: ghostImg,  price: 100, description: "hantu sopan, nggak nakut-nakutin kok" },
+  { id: "frog",   name: "Wonie",  emoji: "🐸", image: frogImg,   price: 70,  description: "Monster ungu yang jago dengerin curhat, telinganya lebar banget!" },
+  { id: "cihuy",  name: "Kwek",  emoji: "🦆", image: cihuy,     price: 90,  description: "bebek lucu yang suka bermain air" },
+  { id: "duckImg",  name: "Pinkypo",  emoji: "🦆", image: duckImg,     price: 90,  description: "Gumpalan merah muda paling empuk sedunia, hobi utamanya cuma makan." },
 ];

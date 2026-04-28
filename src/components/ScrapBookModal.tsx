@@ -1,203 +1,134 @@
 // =============================================================
-// ScrapBookModal — buku kenangan dengan animasi page-flip realistis.
+// ScrapBookModal — Versi 1024x768 Photo Drop 🍃
 // -------------------------------------------------------------
-// Setiap halaman = satu PNG (rasio 1:1) dari src/lib/scrapbook.ts.
-// Animasi: pakai 3D rotateY + perspective. Halaman terbalik
-// dari kanan -> kiri (next), dengan dua sisi (depan = halaman
-// sekarang, belakang = halaman berikutnya), persis seperti
-// membuka buku.
-// Suara: page-flip MP3 dimuat dari URL publik (CDN). Kalau mau
-// pakai suara lokal, taruh file di public/sounds/page-flip.mp3
-// dan ganti FLIP_SOUND_URL di bawah jadi "/sounds/page-flip.mp3".
+// Perubahan:
+// 1. Ratio: Diubah dari aspect-square ke aspect-[1024/768].
+// 2. Layout: Max-width diperbesar (max-w-3xl) agar pas di layar.
+// 3. Animasi: Tetap menggunakan logic jatuh random & reverse.
 // =============================================================
 import { useEffect, useRef, useState } from "react";
 import { PAGES, SCRAPBOOK_TITLE, SCRAPBOOK_SUBTITLE } from "@/lib/scrapbook";
 
-// Suara flip — gratis dari mixkit. Bisa diganti dengan path lokal.
-const FLIP_SOUND_URL =
-  "https://assets.mixkit.co/active_storage/sfx/2434/2434-preview.mp3";
-
-const FLIP_MS = 800;
+const SWISH_SOUND_URL = "public/sounds/page-flip.wav";
 
 export function ScrapBookModal({ onClose }: { onClose: () => void }) {
-  const [page, setPage] = useState(0);
-  const [flipping, setFlipping] = useState<"next" | "prev" | null>(null);
+  const [droppedIndices, setDroppedIndices] = useState<number[]>([]);
+  const [isReversing, setIsReversing] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const total = PAGES.length;
 
-  // Init audio sekali
+  // Pre-calculate arah jatuh acak
+  const [dropPaths] = useState(() => 
+    PAGES.map(() => {
+      const isLeft = Math.random() > 0.5;
+      const x = (Math.random() * 30 + 20) * (isLeft ? -1 : 1); 
+      const y = Math.random() * 40 + 80; 
+      const rot = (Math.random() * 40 + 10) * (isLeft ? -1 : 1); 
+      return `translate(${x}vw, ${y}vh) rotate(${rot}deg) scale(0.7)`;
+    })
+  );
+
+  const [initialRots] = useState(() =>
+    PAGES.map((_, i) => (i === 0 ? 0 : (Math.random() * 4 - 2)))
+  );
+
   useEffect(() => {
-    const a = new Audio(FLIP_SOUND_URL);
-    a.volume = 0.55;
+    const a = new Audio(SWISH_SOUND_URL);
+    a.volume = 0.3;
     a.preload = "auto";
     audioRef.current = a;
     return () => { a.pause(); audioRef.current = null; };
   }, []);
 
-  function playFlipSound() {
-    const a = audioRef.current;
-    if (!a) return;
-    try { a.currentTime = 0; void a.play(); } catch {}
-  }
+  function handleCardClick(index: number) {
+    if (isReversing) return;
 
-  function go(dir: "next" | "prev") {
-    if (flipping) return;
-    if (dir === "next" && page >= total - 1) return;
-    if (dir === "prev" && page <= 0) return;
-    playFlipSound();
-    setFlipping(dir);
-    // Update halaman setelah animasi selesai
-    setTimeout(() => {
-      setPage((p) => p + (dir === "next" ? 1 : -1));
-      setFlipping(null);
-    }, FLIP_MS);
-  }
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      void audioRef.current.play();
+    }
 
-  // Halaman yang muncul saat animasi
-  const currentImg = PAGES[page]?.image;
-  const nextImg = PAGES[Math.min(page + 1, total - 1)]?.image;
-  const prevImg = PAGES[Math.max(page - 1, 0)]?.image;
+    if (droppedIndices.length === total - 1) {
+      setIsReversing(true);
+      const allDropped = [...droppedIndices, index];
+      setDroppedIndices(allDropped);
+
+      setTimeout(() => {
+        let currentDropped = [...allDropped];
+        const reverseInterval = setInterval(() => {
+          currentDropped.pop();
+          setDroppedIndices([...currentDropped]);
+          if (currentDropped.length === 0) {
+            clearInterval(reverseInterval);
+            setIsReversing(false);
+          }
+        }, 150);
+      }, 800);
+      return;
+    }
+
+    setDroppedIndices((prev) => [...prev, index]);
+  }
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
-      style={{
-        background: "color-mix(in oklab, var(--foreground) 45%, transparent)",
-        backdropFilter: "blur(8px)",
-      }}
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/70 backdrop-blur-md overflow-hidden"
       onClick={onClose}
     >
-      <div
-        className="relative w-full max-w-md sm:max-w-lg"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="text-center mb-3 text-white drop-shadow">
-          <h2 className="font-display text-2xl font-bold">{SCRAPBOOK_TITLE} 📖</h2>
-          <p className="text-xs opacity-90">{SCRAPBOOK_SUBTITLE}</p>
-        </div>
-
-        {/* Buku — square karena PNG-nya rasio 1:1 */}
-        <div
-          className="relative w-full aspect-square"
-          style={{ perspective: "1800px" }}
-        >
-          {/* Bayangan buku */}
-          <div className="absolute inset-2 rounded-2xl bg-black/40 blur-xl" />
-
-          {/* Halaman dasar (selalu menampilkan halaman sekarang) */}
-          <div className="absolute inset-0 rounded-2xl overflow-hidden soft-shadow bg-white">
-            <img
-              src={currentImg}
-              alt={PAGES[page]?.alt}
-              className="w-full h-full object-cover select-none"
-              draggable={false}
-            />
-          </div>
-
-          {/* Halaman flipping — hanya muncul saat animasi */}
-          {flipping === "next" && (
-            <div
-              className="absolute inset-0 rounded-2xl scrapbook-page scrapbook-flip-next"
-              style={{ transformOrigin: "left center", transformStyle: "preserve-3d" }}
-            >
-              {/* Sisi depan = halaman sekarang */}
-              <div className="scrapbook-face scrapbook-front">
-                <img src={currentImg} alt="" className="w-full h-full object-cover" draggable={false} />
-              </div>
-              {/* Sisi belakang = halaman berikutnya */}
-              <div className="scrapbook-face scrapbook-back">
-                <img src={nextImg} alt="" className="w-full h-full object-cover" draggable={false} />
-              </div>
-            </div>
-          )}
-
-          {flipping === "prev" && (
-            <div
-              className="absolute inset-0 rounded-2xl scrapbook-page scrapbook-flip-prev"
-              style={{ transformOrigin: "right center", transformStyle: "preserve-3d" }}
-            >
-              <div className="scrapbook-face scrapbook-front">
-                <img src={currentImg} alt="" className="w-full h-full object-cover" draggable={false} />
-              </div>
-              <div className="scrapbook-face scrapbook-back">
-                <img src={prevImg} alt="" className="w-full h-full object-cover" draggable={false} />
-              </div>
-            </div>
-          )}
-
-          {/* Garis spine di tengah biar berasa kayak buku */}
-          <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px bg-black/15" />
-        </div>
-
-        {/* Kontrol */}
-        <div className="mt-4 flex items-center justify-between">
-          <button
-            onClick={() => go("prev")}
-            disabled={page === 0 || !!flipping}
-            className="px-4 py-2 rounded-full bg-white/80 hover:bg-white text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed soft-shadow"
-          >
-            ← Sebelumnya
-          </button>
-          <div className="text-white text-sm font-semibold drop-shadow tabular-nums">
-            {page + 1} / {total}
-          </div>
-          <button
-            onClick={() => go("next")}
-            disabled={page === total - 1 || !!flipping}
-            className="px-4 py-2 rounded-full bg-white/80 hover:bg-white text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed soft-shadow"
-          >
-            Selanjutnya →
-          </button>
-        </div>
-
-        {/* Tombol close */}
-        <button
-          onClick={onClose}
-          className="absolute -top-2 -right-2 w-9 h-9 rounded-full bg-white shadow-lg flex items-center justify-center text-lg"
-          aria-label="Tutup"
-        >
-          ✕
-        </button>
+      <div className="text-center mb-6 text-white z-[60] pointer-events-none">
+        <h2 className="text-3xl font-bold tracking-widest">{SCRAPBOOK_TITLE}</h2>
+        <p className="text-sm opacity-70 mt-1 uppercase tracking-widest">{SCRAPBOOK_SUBTITLE}</p>
       </div>
 
-      {/* Style animasi page flip — keyframes berisi rotasi 3D dengan
-          easing yang bikin halaman ke-flip mirip kertas asli. */}
-      <style>{`
-        .scrapbook-page {
-          will-change: transform;
-        }
-        .scrapbook-face {
-          position: absolute;
-          inset: 0;
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-          border-radius: 1rem;
-          overflow: hidden;
-          box-shadow: 0 10px 30px -10px rgba(0,0,0,.45);
-          background: white;
-        }
-        .scrapbook-front { transform: rotateY(0deg); }
-        .scrapbook-back  { transform: rotateY(180deg); }
+      {/* PENTING: Perubahan rasio di sini 
+          max-w-3xl agar gambar 1024px tidak kekecilan di desktop
+      */}
+      <div 
+        className="relative w-full max-w-3xl aspect-[1024/768] flex items-center justify-center" 
+        onClick={(e) => e.stopPropagation()}
+      >
+        {PAGES.map((page, index) => {
+          const isDropped = droppedIndices.includes(index);
+          const isTopCard = index === (function findTopCard() {
+            for (let i = 0; i < total; i++) {
+              if (!droppedIndices.includes(i)) return i;
+            }
+            return total - 1;
+          })();
 
-        @keyframes scrap-flip-next {
-          0%   { transform: rotateY(0deg);   box-shadow: 0 0 0 rgba(0,0,0,0); }
-          50%  { transform: rotateY(-90deg); box-shadow: -30px 0 40px rgba(0,0,0,.35); }
-          100% { transform: rotateY(-180deg); box-shadow: 0 0 0 rgba(0,0,0,0); }
-        }
-        @keyframes scrap-flip-prev {
-          0%   { transform: rotateY(0deg);   box-shadow: 0 0 0 rgba(0,0,0,0); }
-          50%  { transform: rotateY(90deg);  box-shadow: 30px 0 40px rgba(0,0,0,.35); }
-          100% { transform: rotateY(180deg); box-shadow: 0 0 0 rgba(0,0,0,0); }
-        }
-        .scrapbook-flip-next {
-          animation: scrap-flip-next ${FLIP_MS}ms cubic-bezier(.45,.05,.25,1) forwards;
-        }
-        .scrapbook-flip-prev {
-          animation: scrap-flip-prev ${FLIP_MS}ms cubic-bezier(.45,.05,.25,1) forwards;
-        }
-      `}</style>
+          return (
+            <div
+              key={index}
+              onClick={() => isTopCard && handleCardClick(index)}
+              className="absolute inset-0 rounded-lg bg-white border-[6px] border-white shadow-2xl transition-all duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)]"
+              style={{
+                zIndex: total - index,
+                transform: isDropped 
+                  ? dropPaths[index] 
+                  : `rotate(${initialRots[index]}deg)`,
+                opacity: isDropped ? 0 : 1,
+                cursor: isTopCard && !isReversing ? "pointer" : "default",
+                pointerEvents: isDropped ? "none" : "auto",
+              }}
+            >
+              <img 
+                src={page.image} 
+                alt={page.alt}
+                className="w-full h-full object-cover rounded-sm" 
+                draggable={false}
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      <button
+        onClick={onClose}
+        className="absolute top-6 right-6 text-white/50 hover:text-white text-2xl z-[70]"
+      >
+        ✕
+      </button>
     </div>
   );
 }
