@@ -37,4 +37,6 @@ export const GAMES: GameMeta[] = [
     embed: "/external-games/sokoban-3d/index.html" },
   { id: "ext-sokoban-solver", name: "Sokoban Solver", emoji: "🧠", desc: "Sokoban klasik + solver otomatis (eksternal)",   tone: "from-butter to-mint",
     embed: "/external-games/sokoban-solver/index.html" },
+  { id: "ext-ular-tangga", name: "Ular Tangga", emoji: "🐍", desc: "Permainan ular tangga klasik (eksternal)",   tone: "from-butter to-mint",
+    embed: "/external-games/ular-tangga/index.html" },
 ];
