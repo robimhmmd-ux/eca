@@ -31,8 +31,7 @@ export default function Shop() {
             <div className="flex-1 text-center sm:text-left">
               <div className="font-display font-bold text-lg">Scrap Book</div>
               <p className="text-sm text-muted-foreground mt-1">
-                Buku kenangan berisi apresiasi, foto, dan kata-kata semangat — buat kamu yang istimewa.
-                Setelah dibeli, tombol scrap book muncul di pojok layar dan bisa dibuka kapan aja.
+                Ini adalah scecret item yang harus kamu beli hehehehehe.....
               </p>
             </div>
             <div className="shrink-0">

@@ -14,9 +14,9 @@ import { PETS } from "@/lib/pets";
 import { petMessages, randomFrom } from "@/lib/comfortMessages";
 
 // Tinggi sprite pet di layar (px)
-const PET_SIZE = 72;
+const PET_SIZE = 80;
 // Jarak dari bawah viewport (px) — ruang untuk "tanah"
-const FLOOR_OFFSET = 16;
+const FLOOR_OFFSET = 10;
 
 function PetSprite({ id, index }: { id: string; index: number }) {
   const pet = PETS.find((p) => p.id === id);
