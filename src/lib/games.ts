@@ -29,7 +29,6 @@ export const GAMES: GameMeta[] = [
   { id: "translate-id-en", name: "Translate ID→EN",  emoji: "🇮🇩", desc: "25 round: tebak kosa kata Indonesia ke Inggris", tone: "from-rose to-butter" },
   { id: "translate-en-id", name: "Translate EN→ID",  emoji: "🇬🇧", desc: "25 round: tebak kosa kata Inggris ke Indonesia", tone: "from-butter to-mint" },
   { id: "flying-bird",     name: "Flying Bird",      emoji: "🐦", desc: "Lompat-lompat hindari pipa hijau",                tone: "from-sky to-mint" },
-  { id: "uno",             name: "Kartu UNO",        emoji: "🃏", desc: "Main UNO klasik melawan CPU",                     tone: "from-rose to-lavender" },
   { id: "jigsaw-20",       name: "Jigsaw 5×5",       emoji: "🖼️", desc: "Susun puzzle gambar 25 keping",                   tone: "from-mint to-lavender" },
   { id: "snake-apple",     name: "Ular Makan Apel",  emoji: "🐍", desc: "Pakai tombol arah, makan apel, jangan tabrak",    tone: "from-mint to-sky" },
 
